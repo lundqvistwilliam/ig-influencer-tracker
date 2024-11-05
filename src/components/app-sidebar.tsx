@@ -21,7 +21,7 @@ const data = {
   versions: ["0.0.1"],
   navMain: [
     {
-      title: "Getting Started",
+      title: "Track",
       url: "#",
       items: [
         {
@@ -185,8 +185,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </SidebarGroupContent>
           </SidebarGroup>
         ))}
-        <SidebarTrigger className="-ml-1" />
       </SidebarContent>
+      {/* <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <SidebarTrigger className="" />
+      </div> */}
       <SidebarRail />
     </Sidebar>
   );

@@ -3,6 +3,10 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { Separator } from "@/components/ui/separator";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
+import DynamicBreadcrumbs from "@/components/current-page-breadcrumb";
+import CurrentPageBreadcrumb from "@/components/current-page-breadcrumb";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -25,23 +29,42 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  {/* <SidebarProvider>
+    <AppSidebar />
+    <SidebarTrigger className="-ml-1" />
+  </SidebarProvider>
+  {children} */}
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {/* <SidebarProvider>
-          <AppSidebar />
-          <SidebarTrigger className="-ml-1" />
-        </SidebarProvider>
-        {children} */}
-        <div className="flex h-screen">
-          <SidebarProvider>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <SidebarProvider>
+          <div className="flex h-screen">
             <AppSidebar className="z-10" />
-            <SidebarTrigger className="-ml-1" />
-            <main className="flex-1 overflow-auto">{children}</main>
-          </SidebarProvider>
-        </div>
+            <div className="flex flex-col flex-1">
+              <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
+                <SidebarTrigger className="-ml-1" />
+                <Separator orientation="vertical" className="mr-2 h-4" />
+                <CurrentPageBreadcrumb />
+                {/* <Breadcrumb>
+                  <BreadcrumbList>
+                    <BreadcrumbItem className="hidden md:block">
+                      <BreadcrumbLink href="#">
+                        Building Your Application
+                      </BreadcrumbLink>
+                    </BreadcrumbItem>
+                    <BreadcrumbSeparator className="hidden md:block" />
+                    <BreadcrumbItem>
+                      <BreadcrumbPage>Data Fetching</BreadcrumbPage>
+                    </BreadcrumbItem>
+                  </BreadcrumbList>
+                </Breadcrumb> */}
+              </header>
+              <main className="flex-1 overflow-auto p-4">
+                {children}
+              </main>
+            </div>
+          </div>
+        </SidebarProvider>
       </body>
     </html>
   );
