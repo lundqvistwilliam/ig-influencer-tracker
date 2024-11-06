@@ -24,6 +24,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Loader, Plus } from "lucide-react";
 import { createEvent, getEvents } from '../../lib/apiHelper/eventApi';
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 
 export default function Events() {
@@ -37,6 +38,7 @@ export default function Events() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
+  const router = useRouter();
 
 
   useEffect(() => {
@@ -82,7 +84,7 @@ export default function Events() {
 
     return events.map((event) => {
       return (
-        <Card className="mb-4 h-28" key={event.id}>
+        <Card className="mb-4 h-28 hover:cursor-pointer hover:shadow-lg" key={event.id} onClick={() => { handleOnCardClick(event.id); }}>
           <CardHeader>
             <CardTitle>{event.event_name}</CardTitle>
           </CardHeader>
@@ -92,6 +94,10 @@ export default function Events() {
         </Card>
       );
     });
+  };
+
+  const handleOnCardClick = (eventId: number) => {
+    router.push(`/events/${eventId}`);
   };
 
   if (loading) {
