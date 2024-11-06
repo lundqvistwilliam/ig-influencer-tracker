@@ -7,6 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import DynamicBreadcrumbs from "@/components/current-page-breadcrumb";
 import CurrentPageBreadcrumb from "@/components/current-page-breadcrumb";
+import Head from "next/head";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -22,6 +23,9 @@ const geistMono = localFont({
 export const metadata: Metadata = {
   title: "IG Tracker",
   description: "",
+  icons: {
+    icon: '/favicon.ico',
+  },
 };
 
 export default function RootLayout({
