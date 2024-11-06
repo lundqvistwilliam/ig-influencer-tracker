@@ -1,3 +1,4 @@
+/*
 export async function get(url, onSuccess, onError) {
   try {
     const response = await fetch(url);
@@ -13,6 +14,32 @@ export async function get(url, onSuccess, onError) {
     onError(err);
   }
 }
+  */
+export async function get(url, onSuccess, onError) {
+  try {
+    const headers = {
+      'Content-Type': 'application/json',
+      // 'Authorization': 'Bearer ' + await getToken(), 
+    };
+
+    const response = await fetch(url, { headers });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const result = await response.json();
+
+    if (result.error) {
+      onError(result.error || 'No result');
+    } else {
+      onSuccess(result);
+    }
+  } catch (err) {
+    onError(err.message || 'Something went wrong');
+  }
+}
+
 
 export async function post(url, data, onSuccess, onError) {
   try {
@@ -36,4 +63,3 @@ export async function post(url, data, onSuccess, onError) {
   }
 }
 
-// You can define `put` and `delete` similarly

@@ -21,38 +21,89 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
-import { Plus } from "lucide-react";
-import { createEvent } from '../../lib/apiHelper/eventApi';
-import { useState } from "react";
+import { Loader, Plus } from "lucide-react";
+import { createEvent, getEvents } from '../../lib/apiHelper/eventApi';
+import { useEffect, useState } from "react";
 
 
 export default function Events() {
-  const [event, setEvent] = useState({
+  const [addEvent, setAddEvent] = useState({
     eventName: '',
     eventDescription: '',
   });
+
   const [open, setOpen] = useState(false);
+  const [events, setEvents] = useState<any[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+
+
+  useEffect(() => {
+    const handleSuccess = (result: any) => {
+      setEvents(result);
+      setLoading(false);
+    };
+
+    const handleError = (error: any) => {
+      setError(error);
+      setLoading(false);
+    };
+
+    setLoading(true);
+    getEvents(handleSuccess, handleError);
+  }, []);
 
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setEvent((prevEvent) => ({
+    setAddEvent((prevEvent) => ({
       ...prevEvent,
       [name]: value,
     }));
   };
 
   function handleCreateEvent(event: { eventName: string; eventDescription: string; }) {
-    createEvent(event.eventName, event.eventDescription, (result: any) => {
-      console.log('Event created:', result),
-        setEvent({
-          eventName: '',
-          eventDescription: '',
-        });
+    createEvent(addEvent.eventName, addEvent.eventDescription, (result: any) => {
+      setEvents((prevEvents) => [...prevEvents, result]);
+      setAddEvent({
+        eventName: '',
+        eventDescription: '',
+      });
       setOpen(false);
     }, (error: any) =>
       console.error('Failed to create event:', error)
     );
+  }
+
+
+  const renderEvents = () => {
+    if (events.length <= 0) return null;
+
+    return events.map((event) => {
+      return (
+        <Card className="mb-4 h-28" key={event.id}>
+          <CardHeader>
+            <CardTitle>{event.event_name}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p>{event.description}</p>
+          </CardContent>
+        </Card>
+      );
+    });
+  };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-full">
+        <Loader size={50} color="#123abc" /> <p>Loading..</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
   }
 
   return (
@@ -73,38 +124,22 @@ export default function Events() {
               <Label htmlFor="name" className="text-right">
                 Event name
               </Label>
-              <Input id="eventName" name='eventName' className="col-span-3" value={event.eventName} onChange={handleChange} />
+              <Input id="eventName" name='eventName' className="col-span-3" value={addEvent.eventName} onChange={handleChange} />
             </div>
             <div className="grid-cols-4 items-center gap-4">
               <Label htmlFor="username" className="text-right">
                 Short Description
               </Label>
-              <Textarea id='eventDescription' name='eventDescription' value={event.eventDescription} onChange={handleChange} />
+              <Textarea id='eventDescription' name='eventDescription' value={addEvent.eventDescription} onChange={handleChange} />
             </div>
           </div>
           <p>Add date selector?</p>
           <DialogFooter>
-            <Button type="submit" onClick={() => handleCreateEvent(event)}>Save changes</Button>
+            <Button type="submit" onClick={() => handleCreateEvent(addEvent)}>Save changes</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
-
-      <Card className="mb-4 h-28">
-        <CardHeader>
-          <CardTitle>Event name</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p>Event description</p>
-        </CardContent>
-      </Card>
-      <Card className="mb-4 h-28">
-        <CardHeader>
-          <CardTitle>Event name</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p>Event description</p>
-        </CardContent>
-      </Card>
+      {renderEvents()}
     </>
   );
 };
