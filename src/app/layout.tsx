@@ -8,6 +8,9 @@ import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbP
 import CurrentPageBreadcrumb from "@/components/current-page-breadcrumb";
 import Head from "next/head";
 import DynamicBreadcrumbs from "@/components/dynamic-breadcrumb";
+import { headers } from "next/headers";
+
+
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -28,33 +31,26 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-  {/* <SidebarProvider>
-    <AppSidebar />
-    <SidebarTrigger className="-ml-1" />
-  </SidebarProvider>
-  {children} */}
+export default function RootLayout({ children }: { children: React.ReactNode; }) {
+
+
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <SidebarProvider>
+        {/* <SidebarProvider>
           <div className="flex h-screen w-screen">
             <AppSidebar className="z-10" />
             <main className="flex-1 p-4">
               <header className="flex h-16 shrink-0 items-center gap-2 border-b mb-4">
                 <SidebarTrigger className="-ml-1" />
                 <Separator orientation="vertical" className="mr-2 h-4" />
-                {/* <CurrentPageBreadcrumb /> */}
                 <DynamicBreadcrumbs />
               </header>
               {children}
             </main>
           </div>
-        </SidebarProvider>
+        </SidebarProvider> */}
+        {children}
       </body>
     </html>
   );

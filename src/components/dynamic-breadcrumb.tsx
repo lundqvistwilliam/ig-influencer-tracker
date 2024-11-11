@@ -8,6 +8,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
+import React from 'react';
 
 const DynamicBreadcrumbs = () => {
   const pathname = usePathname();
@@ -37,9 +38,9 @@ const DynamicBreadcrumbs = () => {
         </BreadcrumbItem>
 
         {breadcrumbs.map((crumb, index) => (
-          <>
-            <BreadcrumbSeparator className="hidden md:block" key={index} />
-            <BreadcrumbItem key={crumb.href}>
+          <React.Fragment key={crumb.href}>
+            <BreadcrumbSeparator className="hidden md:block" />
+            <BreadcrumbItem>
               {index === breadcrumbs.length - 1 ? (
                 <BreadcrumbPage>{crumb.label}</BreadcrumbPage>
               ) : (
@@ -48,7 +49,7 @@ const DynamicBreadcrumbs = () => {
                 </BreadcrumbLink>
               )}
             </BreadcrumbItem>
-          </>
+          </React.Fragment>
         ))}
       </BreadcrumbList>
     </Breadcrumb>

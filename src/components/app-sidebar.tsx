@@ -26,13 +26,17 @@ const data = {
       title: "Track",
       url: "#",
       items: [
+        // {
+        //   title: "Home",
+        //   url: "/",
+        // },
         {
           title: "Home",
-          url: "/",
+          url: "/home",
         },
         {
-          title: "Events",
-          url: "/events",
+          title: "Campaigns",
+          url: "/campaigns",
         },
       ],
     },
