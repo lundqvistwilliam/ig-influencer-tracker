@@ -86,7 +86,7 @@ export default function Campaigns() {
       return (
         <Card className="mb-4 h-28 hover:cursor-pointer hover:shadow-lg" key={event.id} onClick={() => { handleOnCardClick(event.id); }}>
           <CardHeader>
-            <CardTitle>{event.event_name}</CardTitle>
+            <CardTitle>{event.event_name} ({event.id})</CardTitle>
           </CardHeader>
           <CardContent>
             <p>{event.description}</p>
@@ -97,7 +97,7 @@ export default function Campaigns() {
   };
 
   const handleOnCardClick = (eventId: number) => {
-    router.push(`/events/${eventId}`);
+    router.push(`/campaigns/${eventId}`);
   };
 
   if (loading) {
