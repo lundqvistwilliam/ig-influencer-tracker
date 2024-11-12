@@ -12,7 +12,7 @@ const cookie = {
   duration: 24 * 60 * 60 * 1000
 };
 
-export async function encrypt(payload) {
+export async function encrypt(payload: any) {
   return new jose.SignJWT(payload)
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
@@ -20,7 +20,7 @@ export async function encrypt(payload) {
     .sign(key);
 }
 
-export async function decrypt(session) {
+export async function decrypt(session: any) {
   try {
     const { payload } = await jose.jwtVerify(session, key, {
       algorithms: ['HS256']
@@ -33,7 +33,7 @@ export async function decrypt(session) {
 }
 
 
-export async function createSession(userId) {
+export async function createSession(userId: number) {
   const expires = new Date(Date.now() + cookie.duration);
   const session = await encrypt({ userId, expires });
 

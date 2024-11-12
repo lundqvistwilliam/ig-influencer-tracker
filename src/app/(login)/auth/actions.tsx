@@ -18,44 +18,27 @@ function createUserAsync(email: string, password: string): Promise<any> {
   });
 }
 
-
-/*
-export async function signup(state, formData: FormData) {
-
-  const validationResult = SignUpSchema.safeParse({
-    email: formData.get('email'),
-    password: formData.get('password'),
-    confirmPassword: formData.get('confirm-password'),
-  });
-
-  if (!validationResult.success) {
-    console.log("f validation ailed");
-    return {
-      errors: validationResult.error.flatten().fieldErrors,
-    };
-  }
-  const { email, password, confirmPassword } = validationResult.data;
-
-  const hashedPassword = await argon2.hash(password);
-
-  createUser(email, hashedPassword, async (user: any) => {
-    console.log('success user', user);
-    await createSession(user.id);
-  }, (error: any) => {
-    console.log(error);
-  });
-}
-*/
-
 export async function signup(prevState: any, formData: FormData) {
-  try {
-    const email = formData.get('email') as string;
-    const password = formData.get('password') as string;
-    const confirmPassword = formData.get('confirm-password') as string;
+  let success = false; // Flag to track if signup is successful
 
+  try {
+    const validationResult = SignUpSchema.safeParse({
+      email: formData.get('email'),
+      password: formData.get('password'),
+      confirmPassword: formData.get('confirm-password'),
+    });
+
+    if (!validationResult.success) {
+      console.log("Validation failed");
+      return {
+        errors: validationResult.error.flatten().fieldErrors,
+      };
+    }
+
+    const { email, password } = validationResult.data;
     const hashedPassword = await argon2.hash(password);
 
-    // Use the promisified version
+    // Create user
     const user = await createUserAsync(email, hashedPassword);
 
     if (!user) {
@@ -64,14 +47,18 @@ export async function signup(prevState: any, formData: FormData) {
       };
     }
 
+    // Create session for the user
     await createSession(user.id);
-    // redirect('/dashboard');
+    success = true; // Mark success
+
   } catch (error) {
     console.error('Signup error:', error);
     return {
       error: error instanceof Error ? error.message : 'An error occurred during signup'
     };
   } finally {
-    redirect('/home');
+    if (success) {
+      redirect('/home'); // Redirect only if signup was successful
+    }
   }
 }

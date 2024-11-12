@@ -4,9 +4,6 @@ export const metadata = {
 };
 
 export default function AuthLayout({ children }: { children: React.ReactNode; }) {
-  console.log('Auth layout applied');
-
-
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
       {children}
