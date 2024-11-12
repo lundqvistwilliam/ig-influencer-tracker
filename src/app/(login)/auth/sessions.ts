@@ -52,8 +52,6 @@ export async function createSession(userId) {
     ...cookie.options,
     expires
   });
-
-  // redirect('/dashboard');
 }
 
 export async function verifySession() {
