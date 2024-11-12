@@ -17,6 +17,7 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { usePathname } from "next/navigation";
+import { NavUser } from "./nav-user";
 
 // This is sample data.
 const data = {
@@ -163,6 +164,12 @@ const data = {
   ],
 };
 
+const user = {
+  name: 'W',
+  email: 'W',
+  avatar: 'W',
+};
+
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar {...props}>
@@ -193,6 +200,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </SidebarGroup>
         ))}
       </SidebarContent>
+      <NavUser user={user} />
       {/* <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
         <SidebarTrigger className="" />
       </div> */}

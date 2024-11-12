@@ -77,9 +77,6 @@ export function SignupForm() {
           <Link className="underline ml-2" href="signin">
             Sign In
           </Link>
-          <Link className="underline ml-2" href="/home">
-            SKIP (REMOVE THIS)
-          </Link>
         </div>
       </form>
     </div>

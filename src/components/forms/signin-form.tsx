@@ -13,11 +13,16 @@ import {
 
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { useFormState } from "react-dom";
+import { login } from "@/app/(login)/auth/actions";
+import { useActionState } from "react";
 
 export function SigninForm() {
+  const [state, action] = useActionState(login, undefined);
+
   return (
     <div className="w-full max-w-md">
-      <form>
+      <form action={action}>
         <Card>
           <CardHeader className="space-y-1">
             <CardTitle className="text-3xl font-bold">Sign In</CardTitle>
@@ -29,8 +34,8 @@ export function SigninForm() {
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
-                id="identifier"
-                name="identifier"
+                id="email"
+                name="email"
                 type="text"
                 placeholder="email"
               />
@@ -53,9 +58,6 @@ export function SigninForm() {
           Don't have an account?
           <Link className="underline ml-2" href="signup">
             Sign Up
-          </Link>
-          <Link className="underline ml-2" href="/home">
-            SKIP (REMOVE THIS)
           </Link>
         </div>
       </form>

@@ -24,3 +24,9 @@ export async function getCurrentUser(onSuccess, onError) {
     onError(error.message || 'Error fetching current user');
   }
 }
+
+export function getUserByEmail(email, onSuccess, onError) {
+  const url = `${process.env.NEXT_PUBLIC_BASE_URL}/users/email/${email}`;
+  get(url, onSuccess, onError);
+}
+
