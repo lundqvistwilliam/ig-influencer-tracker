@@ -4,9 +4,12 @@ import { cache } from "react";
 
 
 export const getUser = cache(async () => {
-  const session = await verifySession();
+  const currUser = await getCurrentUser((user: any) => {
+    console.log("!!USER", user);
+    return user;
+  }, (error: any) => {
+    console.log(error);
+  });
+  console.log("currUser", currUser);
 
-  const user = await getCurrentUser();
-
-  return user;
 });

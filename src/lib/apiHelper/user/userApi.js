@@ -1,3 +1,4 @@
+import { verifySession } from "@/app/(login)/auth/sessions";
 import { get, post } from "../apiClient";
 
 export function createUser(email, password, onSuccess, onError) {
@@ -9,6 +10,7 @@ export async function getCurrentUser(onSuccess, onError) {
   try {
     // Get the current session userId
     const { userId } = await verifySession();
+    console.log("!!!", userId);
 
     // Send the userId to your backend to fetch the user data
     const url = `${process.env.NEXT_PUBLIC_BASE_URL}/users/${userId}`;
