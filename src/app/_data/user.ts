@@ -1,6 +1,7 @@
 import { getCurrentUser } from "@/lib/apiHelper/user/userApi";
 import { verifySession } from "../(login)/auth/sessions";
 import { cache } from "react";
+import { NextResponse } from "next/server";
 
 
 export const getUser = cache(async () => {
@@ -13,3 +14,5 @@ export const getUser = cache(async () => {
   console.log("currUser", currUser);
 
 });
+
+

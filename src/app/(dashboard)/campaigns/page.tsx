@@ -24,24 +24,44 @@ import { Textarea } from "@/components/ui/textarea";
 import { Loader, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { createEvent, getEvents } from "@/lib/apiHelper/eventApi";
+import { createCampaign, createEvent, getCampaignByOrganizationId, getEvents } from "@/lib/apiHelper/eventApi";
+import { NextRequest } from "next/server";
+import { cookies } from "next/headers";
+import { getCurrentUser } from "@/lib/apiHelper/user/userApi";
+import { cookieTranslate } from "@/middleware";
+
+function getCookie(name) {
+  const cookies = document.cookie.split('; ');
+  for (const cookie of cookies) {
+    const [key, value] = cookie.split('=');
+    if (key === name) {
+      return decodeURIComponent(value);
+    }
+  }
+  return null;
+}
 
 
 export default function Campaigns() {
   const [addEvent, setAddEvent] = useState({
-    eventName: '',
-    eventDescription: '',
+    event_name: '',
+    event_description: '',
   });
 
   const [open, setOpen] = useState(false);
   const [events, setEvents] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [user, setUser] = useState<any[]>([]);
 
   const router = useRouter();
 
 
   useEffect(() => {
+    const userDataCookie = getCookie('user-data');
+    let userData = JSON.parse(userDataCookie);
+    setUser(userData);
+
     const handleSuccess = (result: any) => {
       setEvents(result);
       setLoading(false);
@@ -53,7 +73,7 @@ export default function Campaigns() {
     };
 
     setLoading(true);
-    getEvents(handleSuccess, handleError);
+    getCampaignByOrganizationId(userData.organization, handleSuccess, handleError);
   }, []);
 
 
@@ -65,19 +85,19 @@ export default function Campaigns() {
     }));
   };
 
-  function handleCreateEvent(event: { eventName: string; eventDescription: string; }) {
-    createEvent(addEvent.eventName, addEvent.eventDescription, (result: any) => {
+  function handleCreateEvent(event: { event_name: string; event_description: string; }) {
+    console.log(event);
+    createCampaign(event, user?.organization, (result: any) => {
       setEvents((prevEvents) => [...prevEvents, result]);
       setAddEvent({
-        eventName: '',
-        eventDescription: '',
+        event_name: '',
+        event_description: '',
       });
       setOpen(false);
     }, (error: any) =>
       console.error('Failed to create event:', error)
     );
   }
-
 
   const renderEvents = () => {
     if (events.length <= 0) return null;
@@ -130,13 +150,13 @@ export default function Campaigns() {
               <Label htmlFor="name" className="text-right">
                 Event name
               </Label>
-              <Input id="eventName" name='eventName' className="col-span-3" value={addEvent.eventName} onChange={handleChange} />
+              <Input id="event_name" name='event_name' className="col-span-3" value={addEvent.event_name} onChange={handleChange} />
             </div>
             <div className="grid-cols-4 items-center gap-4">
               <Label htmlFor="username" className="text-right">
                 Short Description
               </Label>
-              <Textarea id='eventDescription' name='eventDescription' value={addEvent.eventDescription} onChange={handleChange} />
+              <Textarea id='event_description' name='event_description' value={addEvent.event_description} onChange={handleChange} />
             </div>
           </div>
           <p>Add date selector?</p>

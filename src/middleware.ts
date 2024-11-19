@@ -134,6 +134,8 @@ export default async function middleware(req: NextRequest) {
 }
   */
 
+
+
 export default async function middleware(req: NextRequest) {
   const protectedRoutes = ['/home', '/dashboard', '/settings', '/campaigns'];
   const currentPath = req.nextUrl.pathname;
@@ -162,12 +164,11 @@ export default async function middleware(req: NextRequest) {
         return NextResponse.redirect(new URL('/auth/signin', req.nextUrl));
       }
 
-      // Use the session token itself for API requests since it contains the userId
       try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/users/me`, {
           method: 'GET',
           headers: {
-            'Authorization': `Bearer ${sessionCookie.value}`, // Use the session token directly
+            'Authorization': `Bearer ${sessionCookie.value}`,
           },
         });
 
@@ -178,8 +179,12 @@ export default async function middleware(req: NextRequest) {
 
         const userData = await response.json();
         console.log('User data:', userData);
+        let x = NextResponse.next();
+        x.cookies.set("user-data", JSON.stringify(userData));
+        return x;
 
-        return NextResponse.next();
+
+        // return NextResponse.next() ;
       } catch (error) {
         console.error('API request error:', error);
         return NextResponse.redirect(new URL('/auth/signin', req.nextUrl));
@@ -189,7 +194,14 @@ export default async function middleware(req: NextRequest) {
       return NextResponse.redirect(new URL('/auth/signin', req.nextUrl));
     }
   }
+  console.log("?XD");
 
   return NextResponse.next();
+}
+
+export async function cookieTranslate(cookieSession) {
+  const session = await decrypt(cookieSession);
+  console.log('Decrypted session:', session);
+  return session;
 }
 
