@@ -1,9 +1,6 @@
 import { decrypt } from "@/lib/sessions/sessions";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
-import { getCurrentUser } from "./lib/apiHelper/user/userApi";
-import { getUser } from "./app/_data/user";
-import { verifySession } from "./app/(login)/auth/sessions";
 
 export const config = {
   matcher: ['/home', '/dashboard', '/settings', '/campaigns/:path*'],
@@ -177,14 +174,14 @@ export default async function middleware(req: NextRequest) {
           return NextResponse.redirect(new URL('/auth/signin', req.nextUrl));
         }
 
-        const userData = await response.json();
-        console.log('User data:', userData);
-        let x = NextResponse.next();
-        x.cookies.set("user-data", JSON.stringify(userData));
-        return x;
+        // const userData = await response.json();
+        // console.log('User data:', userData);
+        // let x = NextResponse.next();
+        // x.cookies.set("user-data", JSON.stringify(userData));
+        // return x;
 
 
-        // return NextResponse.next() ;
+        return NextResponse.next();
       } catch (error) {
         console.error('API request error:', error);
         return NextResponse.redirect(new URL('/auth/signin', req.nextUrl));

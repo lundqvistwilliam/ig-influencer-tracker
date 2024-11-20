@@ -1,4 +1,3 @@
-import { verifySession } from "@/app/(login)/auth/sessions";
 import { get, post } from "../apiClient";
 
 export function createUser(email, password, onSuccess, onError) {
@@ -6,7 +5,7 @@ export function createUser(email, password, onSuccess, onError) {
   post(url, { email: email, password: password }, onSuccess, onError);
 }
 
-
+/*
 export async function getCurrentUser(onSuccess, onError) {
   try {
     // Get the current session userId
@@ -26,6 +25,7 @@ export async function getCurrentUser(onSuccess, onError) {
     onError(error.message || 'Error fetching current user');
   }
 }
+  */
 
 
 
@@ -33,4 +33,5 @@ export function getUserByEmail(email, onSuccess, onError) {
   const url = `${process.env.NEXT_PUBLIC_BASE_URL}/users/email/${email}`;
   get(url, onSuccess, onError);
 }
+
 

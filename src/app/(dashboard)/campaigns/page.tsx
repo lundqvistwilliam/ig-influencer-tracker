@@ -25,10 +25,7 @@ import { Loader, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createCampaign, createEvent, getCampaignByOrganizationId, getEvents } from "@/lib/apiHelper/eventApi";
-import { NextRequest } from "next/server";
-import { cookies } from "next/headers";
-import { getCurrentUser } from "@/lib/apiHelper/user/userApi";
-import { cookieTranslate } from "@/middleware";
+import { getCurrentUserAction } from "@/lib/actions";
 
 function getCookie(name) {
   const cookies = document.cookie.split('; ');
@@ -56,12 +53,34 @@ export default function Campaigns() {
 
   const router = useRouter();
 
-
   useEffect(() => {
-    const userDataCookie = getCookie('user-data');
-    let userData = JSON.parse(userDataCookie);
-    setUser(userData);
+    async function fetchUserAndCampaign() {
+      try {
+        const response = await fetch('/api/user');
+        if (!response.ok) {
+          console.log("Failed to fetch user");
+          return;
+        }
 
+        const { user } = await response.json();
+
+        setUser(user);
+        console.log("USERRR", user);
+
+        if (user?.organization) {
+          try {
+            getCampaignByOrganizationId(user.organization, handleSuccess, handleError);
+          } catch (error) {
+            console.error('Failed to fetch campaigns', error);
+          }
+        }
+
+      } catch (error) {
+        console.error('Failed to fetch user', error);
+      } finally {
+        setLoading(false);
+      }
+    }
     const handleSuccess = (result: any) => {
       setEvents(result);
       setLoading(false);
@@ -73,7 +92,7 @@ export default function Campaigns() {
     };
 
     setLoading(true);
-    getCampaignByOrganizationId(userData.organization, handleSuccess, handleError);
+    fetchUserAndCampaign();
   }, []);
 
 
@@ -106,7 +125,7 @@ export default function Campaigns() {
       return (
         <Card className="mb-4 h-28 hover:cursor-pointer hover:shadow-lg" key={event.id} onClick={() => { handleOnCardClick(event.id); }}>
           <CardHeader>
-            <CardTitle>{event.event_name} ({event.id})</CardTitle>
+            <CardTitle>{event.event_name}</CardTitle>
           </CardHeader>
           <CardContent>
             <p>{event.description}</p>
