@@ -26,6 +26,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createCampaign, createEvent, getCampaignByOrganizationId, getEvents } from "@/lib/apiHelper/eventApi";
 import { getCurrentUserAction } from "@/lib/actions";
+import { toast } from "sonner";
 
 function getCookie(name) {
   const cookies = document.cookie.split('; ');
@@ -105,7 +106,6 @@ export default function Campaigns() {
   };
 
   function handleCreateEvent(event: { event_name: string; event_description: string; }) {
-    console.log(event);
     createCampaign(event, user?.organization, (result: any) => {
       setEvents((prevEvents) => [...prevEvents, result]);
       setAddEvent({
@@ -113,6 +113,13 @@ export default function Campaigns() {
         event_description: '',
       });
       setOpen(false);
+      toast("Event has been created", {
+        description: "Sunday, December 03, 2023 at 9:00 AM",
+        action: {
+          label: "Undo",
+          onClick: () => console.log("Undo"),
+        },
+      });
     }, (error: any) =>
       console.error('Failed to create event:', error)
     );

@@ -1,6 +1,7 @@
 import { AppSidebar } from "@/components/app-sidebar";
 import DynamicBreadcrumbs from "@/components/dynamic-breadcrumb";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { Toaster } from "@/components/ui/sonner";
 import { Separator } from "@radix-ui/react-separator";
 
 
@@ -16,6 +17,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <DynamicBreadcrumbs />
           </header>
           {children}
+          <Toaster />
         </main>
       </div>
     </SidebarProvider>
