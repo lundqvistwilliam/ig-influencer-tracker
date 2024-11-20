@@ -1,4 +1,4 @@
-import { get, post } from "./apiClient";
+import { _del, get, post } from "./apiClient";
 
 export function createEvent(eventName, description, onSuccess, onError) {
   const url = `${process.env.NEXT_PUBLIC_BASE_URL}/events`;
@@ -26,7 +26,10 @@ export function createCampaign(campaignData, organizationId, onSuccess, onError)
     event_name: campaignData.event_name,
     description: campaignData.event_description
   };
-  console.log(campaignData);
-  console.log(data);
   post(url, data, onSuccess, onError);
+}
+
+export function deleteCampaign(id, onSuccess, onError) {
+  const url = `${process.env.NEXT_PUBLIC_BASE_URL}/events/${id}`;
+  _del(url, onSuccess, onError);
 }

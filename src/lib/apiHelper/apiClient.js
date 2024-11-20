@@ -63,3 +63,25 @@ export async function post(url, data, onSuccess, onError) {
   }
 }
 
+export async function _del(url, onSuccess, onError) {
+  try {
+    const response = await fetch(url, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        // 'Authorization': 'Bearer ' + await getToken(), 
+      }
+    });
+
+    const result = response.status !== 204 ? await response.json() : null;
+
+    if (response.ok) {
+      onSuccess(result);
+    } else {
+      onError(result?.error || `Delete failed with status: ${response.status}`);
+    }
+  } catch (err) {
+    onError(err.message || 'Something went wrong during delete request');
+  }
+}
+

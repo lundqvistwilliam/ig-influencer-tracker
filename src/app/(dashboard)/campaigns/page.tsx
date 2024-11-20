@@ -66,7 +66,6 @@ export default function Campaigns() {
         const { user } = await response.json();
 
         setUser(user);
-        console.log("USERRR", user);
 
         if (user?.organization) {
           try {
