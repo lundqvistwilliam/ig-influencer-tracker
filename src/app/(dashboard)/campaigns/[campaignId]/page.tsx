@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { Switch } from '@/components/ui/switch';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { deleteCampaign, getEventById } from '@/lib/apiHelper/eventApi';
 import { Label } from '@radix-ui/react-label';
@@ -137,12 +138,27 @@ const CampaignDetails = () => {
           <h1 className="text-3xl font-bold mb-4">{event.event_name}</h1>
           <p className="text-lg mb-6">{event.description}</p>
           <div className="bg-muted p-4 rounded-lg">
-            <h2 className="text-xl font-semibold mb-2">Tracking Information</h2>
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-semibold">Tracking Information</h2>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div className="flex items-center space-x-2">
+                      <Label htmlFor="start-campaign" className="cursor-help">Start tracking</Label>
+                      <Switch id="start-campaign" />
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Will enable or disable the tracking.</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
             {(trackingInfo.keywords.length > 0 || trackingInfo.accountNames.length > 0) ? (
               <div>
                 {trackingInfo.keywords.length > 0 && (
                   <div className="mb-4">
-                    <h3 className="font-medium mb-2">Keywords:</h3>
+                    <h3 className="font-bold mb-2 ">Keywords:</h3>
                     <div className="flex flex-wrap gap-2">
                       {trackingInfo.keywords.map(keyword => (
                         <span key={keyword} className="bg-primary text-primary-foreground px-2 py-1 rounded-full text-sm">
@@ -152,13 +168,25 @@ const CampaignDetails = () => {
                     </div>
                   </div>
                 )}
+                {trackingInfo.hashtags.length > 0 && (
+                  <div className="mb-4">
+                    <h3 className="font-bold mb-2">Hashtags:</h3>
+                    <div className="flex flex-wrap gap-2">
+                      {trackingInfo.hashtags.map(hashtag => (
+                        <span key={hashtag} className="bg-primary text-primary-foreground px-2 py-1 rounded-full text-sm">
+                          <Hash />{hashtag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
                 {trackingInfo.accountNames.length > 0 && (
                   <div>
-                    <h3 className="font-medium mb-2">Account Names:</h3>
+                    <h3 className="font-bold mb-2">Account Names:</h3>
                     <div className="flex flex-wrap gap-2">
                       {trackingInfo.accountNames.map(accountName => (
                         <span key={accountName} className="bg-secondary text-secondary-foreground px-2 py-1 rounded-full text-sm">
-                          {accountName}
+                          <AtSign />{accountName}
                         </span>
                       ))}
                     </div>
