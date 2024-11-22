@@ -2,12 +2,13 @@
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { deleteCampaign, getEventById } from '@/lib/apiHelper/eventApi';
 import { Label } from '@radix-ui/react-label';
-import { AlertTriangle, AtSign, Hash, Info, X } from 'lucide-react';
+import { AlertTriangle, AtSign, Hash, Info, MoreVertical, Pencil, Trash2, X } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from "react";
 
@@ -28,6 +29,16 @@ const CampaignDetails = () => {
   const [keywordInput, setKeywordInput] = useState('');
   const [hashtagInput, setHashtagInput] = useState('');
   const [accountNameInput, setAccountNameInput] = useState('');
+
+  // MOCK DATA IMAGES
+  const fetchedImages = [
+    "/placeholder.svg?height=200&width=200",
+    "/placeholder.svg?height=200&width=200",
+    "/placeholder.svg?height=200&width=200",
+    "/placeholder.svg?height=200&width=200",
+    "/placeholder.svg?height=200&width=200",
+    "/placeholder.svg?height=200&width=200",
+  ];
 
   const addKeyword = () => {
     if (keywordInput.trim() && !trackingInfo.keywords.includes(keywordInput.trim())) {
@@ -98,6 +109,11 @@ const CampaignDetails = () => {
     );
   };
 
+  const handleEditCampaign = () => {
+    console.log('Editing campaign...');
+    // Here you would typically open an edit form or navigate to an edit page
+  };
+
   useEffect(() => {
     if (!campaignId) return;
 
@@ -133,9 +149,29 @@ const CampaignDetails = () => {
 
   return (
     <>
-      <Card className="h-screen flex flex-col p-6">
+      <Card className="flex flex-col p-6">
         <div className="flex-grow">
-          <h1 className="text-3xl font-bold mb-4">{event.event_name}</h1>
+          <div className="flex justify-between items-center mb-4">
+            <h1 className="text-3xl font-bold">{event.event_name}</h1>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  <MoreVertical className="h-4 w-4" />
+                  <span className="sr-only">Open menu</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={handleEditCampaign}>
+                  <Pencil className="mr-2 h-4 w-4" />
+                  <span>Edit</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setIsDeleteDialogOpen(true)}>
+                  <Trash2 className="mr-2 h-4 w-4" />
+                  <span>Delete</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
           <p className="text-lg mb-6">{event.description}</p>
           <div className="bg-muted p-4 rounded-lg">
             <div className="flex justify-between items-center mb-4">
@@ -154,7 +190,7 @@ const CampaignDetails = () => {
                 </Tooltip>
               </TooltipProvider>
             </div>
-            {(trackingInfo.keywords.length > 0 || trackingInfo.accountNames.length > 0) ? (
+            {(trackingInfo.keywords.length > 0 || trackingInfo.hashtags.length > 0 || trackingInfo.accountNames.length > 0) ? (
               <div>
                 {trackingInfo.keywords.length > 0 && (
                   <div className="mb-4">
@@ -174,7 +210,7 @@ const CampaignDetails = () => {
                     <div className="flex flex-wrap gap-2">
                       {trackingInfo.hashtags.map(hashtag => (
                         <span key={hashtag} className="bg-primary text-primary-foreground px-2 py-1 rounded-full text-sm">
-                          <Hash />{hashtag}
+                          <Hash className="inline-block mr-1" size={12} />{hashtag}
                         </span>
                       ))}
                     </div>
@@ -186,7 +222,7 @@ const CampaignDetails = () => {
                     <div className="flex flex-wrap gap-2">
                       {trackingInfo.accountNames.map(accountName => (
                         <span key={accountName} className="bg-secondary text-secondary-foreground px-2 py-1 rounded-full text-sm">
-                          <AtSign />{accountName}
+                          <AtSign className="inline-block mr-1" size={12} />{accountName}
                         </span>
                       ))}
                     </div>
@@ -254,7 +290,7 @@ const CampaignDetails = () => {
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <div className="flex items-center space-x-1 cursor-help">
-                            <Label htmlFor="keyword" className="cursor-help">Hashtags</Label>
+                            <Label htmlFor="hashtags" className="cursor-help">Hashtags</Label>
                             <Info size={12} />
                           </div>
                         </TooltipTrigger>
@@ -276,7 +312,7 @@ const CampaignDetails = () => {
                   <div className="flex flex-wrap gap-2 mt-2">
                     {trackingInfo.hashtags.map(hashtag => (
                       <span key={hashtag} className="bg-secondary text-secondary-foreground px-2 py-1 rounded-full text-sm flex items-center">
-                        {<Hash size={12} />}{hashtag}
+                        <Hash size={12} />{hashtag}
                         <button
                           type="button"
                           onClick={() => removeHashtag(hashtag)}
@@ -294,7 +330,7 @@ const CampaignDetails = () => {
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <div className="flex items-center space-x-1 cursor-help">
-                            <Label htmlFor="keyword" className="cursor-help">Accounts</Label>
+                            <Label htmlFor="accountName" className="cursor-help">Accounts</Label>
                             <Info size={12} />
                           </div>
                         </TooltipTrigger>
@@ -316,7 +352,7 @@ const CampaignDetails = () => {
                   <div className="flex flex-wrap gap-2 mt-2">
                     {trackingInfo.accountNames.map(accountName => (
                       <span key={accountName} className="bg-secondary text-secondary-foreground px-2 py-1 rounded-full text-sm flex items-center">
-                        {<AtSign size={12} />}{accountName}
+                        <AtSign size={12} />{accountName}
                         <button
                           type="button"
                           onClick={() => removeAccountName(accountName)}
@@ -333,16 +369,25 @@ const CampaignDetails = () => {
             </DialogContent>
           </Dialog>
         </div>
+
+        {/* Image Gallery Section */}
+        <div className="mt-8">
+          <h2 className="text-2xl font-bold mb-4">Image Gallery</h2>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            {fetchedImages.map((image, index) => (
+              <div key={index} className="aspect-square">
+                <img
+                  src={image}
+                  alt={`Gallery image ${index + 1}`}
+                  className="w-full h-full object-cover rounded-lg"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
       </Card>
 
       <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-        <DialogTrigger asChild>
-          <div className="flex items-center justify-center mt-6 mb-8">
-            <Button variant="destructive" className="w-1/5 mb-6 px-9 py-5">
-              Delete Campaign
-            </Button>
-          </div>
-        </DialogTrigger>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Are you sure you want to delete this campaign?</DialogTitle>
