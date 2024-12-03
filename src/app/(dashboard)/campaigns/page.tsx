@@ -21,7 +21,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
-import { Loader, Plus } from "lucide-react";
+import { Calendar, Loader, Plus, Users } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createCampaign, createEvent, getCampaignByOrganizationId, getEvents } from "@/lib/apiHelper/eventApi";
@@ -129,14 +129,27 @@ export default function Campaigns() {
 
     return events.map((event) => {
       return (
-        <Card className="mb-4 h-28 hover:cursor-pointer hover:shadow-lg" key={event.id} onClick={() => { handleOnCardClick(event.id); }}>
-          <CardHeader>
-            <CardTitle>{event.event_name}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p>{event.description}</p>
-          </CardContent>
-        </Card>
+        <div className="grid grid-cols-1 mb-5 gap-6">
+          <Card key={event.id} className="hover:shadow-lg transition-shadow duration-300 cursor-pointer" onClick={() => handleOnCardClick(event.id)}>
+            <CardHeader>
+              <CardTitle>{event.event_name}</CardTitle>
+              <CardDescription>{new Date(event.created_at).toLocaleDateString()}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-gray-600 line-clamp-2">{event.description}</p>
+            </CardContent>
+            <CardFooter className="flex justify-between">
+              <div className="flex items-center text-sm text-gray-500">
+                <Calendar className="mr-2 h-4 w-4" />
+                <span>Upcoming</span>
+              </div>
+              <div className="flex items-center text-sm text-gray-500">
+                <Users className="mr-2 h-4 w-4" />
+                <span>Team WWW</span>
+              </div>
+            </CardFooter>
+          </Card>
+        </div>
       );
     });
   };

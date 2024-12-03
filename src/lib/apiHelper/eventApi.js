@@ -33,3 +33,6 @@ export function deleteCampaign(id, onSuccess, onError) {
   const url = `${process.env.NEXT_PUBLIC_BASE_URL}/events/${id}`;
   _del(url, onSuccess, onError);
 }
+
+
+// TODO : LOOK how to add profile to database, multiple profiles etc
